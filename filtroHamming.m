@@ -1,6 +1,6 @@
 clc all; close all; clear all;
 
-[data, Fs] = audioread('aea.wav');
+[data, Fs] = audioread('sound1.wav');
 T = 1 / Fs;  
 fc = 2300;
 fc1 = 4000;
