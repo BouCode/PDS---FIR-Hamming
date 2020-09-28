@@ -1,12 +1,12 @@
 clc all; close all; clear all;
 
-[data, Fs] = audioread('sound01.wav');
-Fs
+tic
+[data, Fs] = audioread('sound1.wav');
 T = 1 / Fs; 
 fc = 2000;
 fc1 = 2000;
 fc2 = 3000;
-M = 50;
+M = 10;
 N = length(data);
 fp = Fs * [0:N-1]/N;
 t = [0:N-1]' * T;    
@@ -25,17 +25,16 @@ plot (t, data);
 title ('Audio');
 xlabel ('Tiempo (s)')
 grid;
-length (fp(1:(N/2)))
-length (y(N/2:end))
+
 subplot (212);
-plot (fp(1:(N/2)), y(N/2:end -1));  
+plot (fp(1:(N/2)), y(N/2:end-1));  
 title ('x[n]');
 xlabel ('Frecuencia (Hz)')
 grid;
 
 b_l=fir1(M, FC, "low");
 b_u=fir1(M, FC, "high");
-b_p=fir1(M, [FC1 FC2], "bandpass")
+b_p=fir1(M, [FC1 FC2], "bandpass");
 
 figure (2);
 subplot (311);
@@ -195,14 +194,28 @@ hold off;
 title ('Convolución: Pasa banda')
 grid;
 
-audiowrite ('Ruisenior.wav', data, Fs)
-audiowrite ('RuiseniorPasaBajo.wav', z1, Fs)
-audiowrite ('RuiseniorPasaAlto.wav', z2, Fs)
-audiowrite ('RuiseniorPasaBanda.wav', z3, Fs)
+figure (7);
+freqz (b_l, 1, N)
 
-#sound (data)
-#sound (z1)
-#sound (z2)
-#sound (z3)
+figure (8);
+freqz (b_u, 1, N)
+
+figure (9);
+freqz (b_p, 1, N)
+
+#audiowrite ('Ruisenior.wav', data, Fs)
+#audiowrite ('RuiseniorPasaBajo.wav', z1, Fs)
+#audiowrite ('RuiseniorPasaAlto.wav', z2, Fs)
+#audiowrite ('RuiseniorPasaBanda.wav', z3, Fs)
+toc;
+#{
+fprintf ('Audio Original\n')
+sound (data)
+fprintf ('Audio Filtro Pasa Baja\n')
+sound (z1)
+fprintf ('Audio Filtro Pasa Alta\n')
+sound (z2)
+fprintf ('Audio Filtro Pasa Banda\n')
+sound (z3)
+}#
 #PORFIN
-
