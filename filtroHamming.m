@@ -1,12 +1,14 @@
 clc all; close all; clear all;
 
-[data, Fs] = audioread('sound1.wav');
-T = 1 / Fs;  
-fc = 2300;
-fc1 = 4000;
-fc2 = 5000;
-M = 10
-N = length(data);   
+[data, Fs] = audioread('sound01.wav');
+Fs
+T = 1 / Fs; 
+fc = 2000;
+fc1 = 2000;
+fc2 = 3000;
+M = 50;
+N = length(data);
+fp = Fs * [0:N-1]/N;
 t = [0:N-1]' * T;    
 FC = fc/(Fs/2);
 FC1 = fc1/(Fs/2);
@@ -23,9 +25,10 @@ plot (t, data);
 title ('Audio');
 xlabel ('Tiempo (s)')
 grid;
-
+length (fp(1:(N/2)))
+length (y(N/2:end))
 subplot (212);
-plot ((0:(N/2)), y(N/2:end));  
+plot (fp(1:(N/2)), y(N/2:end -1));  
 title ('x[n]');
 xlabel ('Frecuencia (Hz)')
 grid;
@@ -88,25 +91,25 @@ np3 = p3/max(p3);
 figure (3)
 
 subplot (221);
-plot (data);
+plot (t, data);
 title ('Frecuencia');
 
 subplot (222);
-plot (xf1);
+plot (t, xf1);
 title ('Señal filtrada');
 xlabel('tiempo');
 ylabel ('Amplitud');
 
 subplot (223);
-plot ((0:N/2),ny(N/2:end));
+plot (fp(1:(N/2)), ny(N/2:end -1));
 hold on;
-plot ((0:N/2),ns1(N/2:end),'color', 'r');
+plot (fp(1:(N/2)), ns1(N/2:end -1),'color', 'r');
 hold off;
 title ('Pasa bajo: Frecuencia');
 grid on;
 
 subplot (224);
-plot ((0:N/2),np1(N/2:end))
+plot (fp(1:(N/2)), np1(N/2:end -1))
 title ('Pasa bajo: Señal filtrada');
 xlabel('Hz');
 ylabel('Amplitud')
@@ -115,24 +118,25 @@ grid on;
 figure (4);
 
 subplot (221);
-plot (data);
+plot (t, data);
 title ('Frecuencia');
 
 subplot (222);
-plot (xf2);
+plot (t, xf2);
 title ('Señal filtrada');
 xlabel('tiempo');
 ylabel ('Amplitud');
+
 subplot (223);
-plot ((0:N/2),ny(N/2:end));
+plot (fp(1:(N/2)), ny(N/2:end -1))
 hold on;
-plot ((0:N/2),ns2(N/2:end),'color', 'r');
+plot (fp(1:(N/2)), ns2(N/2:end -1), 'color', 'r')
 hold off;
 title ('Pasa alto: Frecuencia');
 grid on;
 
 subplot (224);
-plot ((0:N/2),np2(N/2:end))
+plot (fp(1:(N/2)),np2(N/2:end - 1))
 title ('Pasa alto: Señal filtrada');
 xlabel('Hz');
 ylabel('Amplitud')
@@ -141,55 +145,57 @@ grid on;
 figure (5);
 
 subplot (221);
-plot (data);
+plot (t, data);
 title ('Frecuencia');
 
 subplot (222);
-plot (xf3);
+plot (t, xf3);
 title ('Señal filtrada');
 xlabel('tiempo');
 ylabel ('Amplitud');
 
 subplot (223);
-plot ((0:N/2),ny(N/2:end));
+plot (fp(1:(N/2)),ny(N/2:end - 1));
 hold on;
-plot ((0:N/2),ns3(N/2:end),'color', 'r');
+plot (fp(1:(N/2)),ns3(N/2:end - 1),'color', 'r');
 hold off;
 title ('Pasa banda: Frecuencia');
 grid on;
 
 subplot (224);
-plot ((0:N/2),np3(N/2:end))
+plot (fp(1:(N/2)),np3(N/2:end - 1))
 title ('Pasa banda: Señal filtrada');
 xlabel('Hz');
 ylabel('Amplitud')
 grid on;
 
 figure (6);
+
 subplot (311);
-plot (data);
+plot (t, data);
 hold on;
-plot (z1, 'color', 'r')
+plot (t, z1 (1:length(z1)-M));
 hold off;
 title ('Convolución: Pasa bajo')
 grid;
 
 subplot (312);
-plot (data);
+plot (t, data);
 hold on;
-plot (z2, 'color', 'r');
+plot (t, z2 (1:length(z2)-M));
 hold off;
 title ('Convolución: Pasa alta')
 grid;
 
 subplot (313);
-plot (data);
+plot (t, data);
 hold on;
-plot (z3, 'color', 'r');
+plot (t, z3(1:length(z3)-M));
 hold off;
 title ('Convolución: Pasa banda')
 grid;
 
+audiowrite ('Ruisenior.wav', data, Fs)
 audiowrite ('RuiseniorPasaBajo.wav', z1, Fs)
 audiowrite ('RuiseniorPasaAlto.wav', z2, Fs)
 audiowrite ('RuiseniorPasaBanda.wav', z3, Fs)
@@ -199,3 +205,4 @@ audiowrite ('RuiseniorPasaBanda.wav', z3, Fs)
 #sound (z2)
 #sound (z3)
 #PORFIN
+
